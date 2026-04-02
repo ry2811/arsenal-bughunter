@@ -1,0 +1,81 @@
+# 🛡️ Hướng Dẫn Sử Dụng Arsenal AI Security Agent (v13.0)
+
+Arsenal là một AI Agent đa năng được thiết kế để săn lỗi bảo mật trên cả ba mặt trận: **Web3 (Smart Contracts)**, **Web2 (Web App/API)**, và **Mobile (Android/iOS)**.
+
+---
+
+## 📋 1. Chuẩn Bị & Cấu Hình
+
+### Yêu cầu hệ thống:
+*   **Hệ điều hành**: Linux hoặc WSL2 (Windows Subsystem for Linux).
+*   **Ngôn ngữ**: Python 3.10+, Go (Global).
+*   **API Keys**: Cần cấu hình trong file `.env`:
+    *   `GOOGLE_API_KEYS`: Danh sách key Gemini (cách nhau bởi dấu phẩy).
+    *   `DEEPSEEK_API_KEY`: Key cho DeepSeek R1 (dùng để suy luận logic sâu).
+
+### Cài đặt Tools:
+Arsenal tự động kiểm tra các công cụ khi khởi động. Hãy đảm bảo bạn đã cài:
+*   **Go tools (Global)**: `subfinder`, `httpx`, `nuclei`, `ffuf`, `dalfox`, `interactsh-client`.
+*   **Python tools (`/tools`)**: Đã được cài trong thư mục cục bộ của dự án.
+*   **Web3 tools**: `forge` (Foundry), `slither`, `aderyn`, `mythril`, `surya`.
+
+---
+
+## 🚀 2. Các Lệnh Thực Chiến
+
+### A. Quét Smart Contract (Web3)
+Dùng cho các Repo GitHub hoặc file Solidity cục bộ.
+```bash
+# Quét toàn bộ Repo GitHub
+python audit_agent.py https://github.com/OpenZeppelin/openzeppelin-contracts
+
+# Quét với phạm vi cụ thể (Scope)
+python audit_agent.py https://github.com/SushiSwap/sushiswap --scope "protocols/lending"
+```
+
+### B. Săn Bug Web App (Web2)
+Dùng cho một URL mục tiêu cụ thể. Giai đoạn này sẽ kích hoạt `js_analyst`, `param_miner`, và `injection_expert`.
+```bash
+python audit_agent.py https://example.com
+```
+
+### C. Càn quét Subdomain (Wildcard - HackerOne/Bugcrowd)
+Dùng khi bạn có quyền quét toàn bộ dải subdomain.
+```bash
+python audit_agent.py "*.target.com"
+```
+
+### D. Kiểm tra App Mobile (APK/IPA)
+Chỉ cần đưa đường dẫn đến file app cục bộ.
+```bash
+python audit_agent.py "./my_app.apk"
+```
+
+---
+
+## 🧠 3. Các Tính Năng Nâng Cao
+
+### 1. AI Key Rotation (Xoay Key tự động)
+Arsenal có cơ chế **Session-local Rotation**. Nếu một API Key bị hết hạn (Error 429), Agent sẽ tự động chuyển sang Key tiếp theo trong danh sách mà không làm gián đoạn tiến trình.
+
+### 2. Persistence (Lưu checkpoint)
+Dữ liệu được lưu vào `arsenal_checkpoints.db`. Nếu máy tính bị sập, bạn chỉ cần chạy lại lệnh cũ, Agent sẽ nhận diện phiên làm việc trước đó và tiếp tục.
+
+### 3. Interactive Pentesting (Playwright)
+Nếu trang web yêu cầu Login, hãy đặt `SHOW_BROWSER=True` trong `.env`. Arsenal sẽ mở trình duyệt để bạn đăng nhập thủ công, sau đó nó sẽ lấy Cookies và tiếp tục quét các trang ẩn bên trong.
+
+### 4. Professional Reporting
+Sau mỗi lần audit, Arsenal tạo ra file `Immunefi_Professional_Report.md`. Đây là báo cáo chuẩn hóa theo tiêu chuẩn của **Immunefi V2.1**, bao gồm IMPACT, ROOT CAUSE và PoC (Proof of Concept).
+
+---
+
+## 🛠️ 4. Giải Quyết Sự Cố (Troubleshooting)
+
+*   **Lỗi "Missing Tools"**: Kiểm tra log khởi động. Arsenal sẽ liệt kê chính xác tool nào bị thiếu. Hãy cài nó bằng `go install` hoặc `pip install`.
+*   **Lỗi Quota (Gemini/DeepSeek)**: Thêm nhiều API Key hơn vào file `.env`.
+*   **Lỗi PoC (Forge Error)**: AI thực hiện giả lập lỗi thông qua file `ArsenalExploit.t.sol`. Nếu lỗi không tái hiện được, hãy kiểm tra log trong file `fuzz_results.log`.
+
+---
+
+> [!TIP]
+> **Mẹo vặt**: Luôn luôn kiểm tra thư mục `/knowledge`. Nếu bạn muốn Arsenal thông minh hơn về một giao thức cụ thể (ví dụ: Radiant Capital), hãy ném tài liệu Whitepaper (PDF/MD) của họ vào thư mục này. Librarian sẽ tự động đọc và dạy cho Auditor cách tấn công!

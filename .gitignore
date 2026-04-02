@@ -1,0 +1,30 @@
+# Virtual Environments
+venv/
+mythril-env/
+.venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+.env.*
+
+# Cloned repos & temporary reports
+temp_repo/
+aderyn_report.json
+slither_report.json
+mythril_report.json
+
+# IDEs
+.vscode/
+.idea/
+
+# Foundry / Building
+out/
+cache/
+broadcast/

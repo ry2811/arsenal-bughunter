@@ -1,0 +1,12 @@
+.env
+.git
+admin
+config
+backup
+api
+v1
+v2
+wp-admin
+phpmyadmin
+.htaccess
+.ssh

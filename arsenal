@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Arsenal Smart Wrapper (v6.4 Autonomous Runner)
+# Helps run Arsenal from ANY directory without manual venv activation.
+
+# Get the absolute directory of THIS script
+SCRIPT_DIR="/home/super/web3-bug-hunter"
+PYTHON_BIN="$SCRIPT_DIR/venv/bin/python"
+
+# Run Arsenal passing all arguments
+$PYTHON_BIN "$SCRIPT_DIR/audit_agent.py" "$@"
